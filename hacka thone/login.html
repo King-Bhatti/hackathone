@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
+<body>
+    <form id="LoginForm" class="form-container w-27 m-4 h-75">
+        <div class="d-flex align-items-center">
+            <i class="icon3 fas fa-sign-in-alt"></i>
+            <h1><b>Login</b></h1>
+        </div>
+        <div class="row form-floating mb-3 mt-3">
+            <div class="input mb-3">
+                <i class="icon fas fa-envelope"></i>
+                <input type="email" class="form-control" id="loginEmail" placeholder="Email">
+            </div>
+            <div class="icon input mb-3">
+                <i class="icon fas fa-lock"></i>
+                <input type="password" class="form-control" id="loginPassword" placeholder="Password">
+            </div>
+            <button type="submit" class="btn btn-primary" id="loginBtn">Login</button>
+        </div>
+    </form>
+
+    <!-- Firebase JavaScript -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBisTDJZiR4Gwx5FgHxipBG28tP8f5sl2M",
+            authDomain: "test1-2e387.firebaseapp.com",
+            projectId: "test1-2e387",
+            storageBucket: "test1-2e387.appspot.com",
+            messagingSenderId: "728708237387",
+            appId: "1:728708237387:web:ec78d76abb3310956ee5ce",
+            measurementId: "G-3G0T2YS63Y"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const analytics = getAnalytics(app);
+
+        const loginEmail = document.getElementById("loginEmail");
+        const loginPassword = document.getElementById("loginPassword");
+        const loginForm = document.getElementById("LoginForm");
+
+        const login = (event) => {
+            event.preventDefault();
+            const email = loginEmail.value;
+            const password = loginPassword.value;
+
+            if (!email.trim() || !password.trim()) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Email and password are required fields',
+                });
+                return;
+            }
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Login successful',
+                    });
+                    // Additional logic if needed, e.g., redirect to another page
+                })
+                .catch((error) => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: `${error.code}: ${error.message}`,
+                    });
+                });
+        };
+
+        loginForm.addEventListener('submit', login);
+    </script>
+</body>
+</html>
